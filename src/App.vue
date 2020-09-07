@@ -1,28 +1,33 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <v-app>
+        <v-app-bar app color="primary" dark class="d-flex align-center">
+            <v-toolbar-title>Саулет Ыскак (Тестовое задание)</v-toolbar-title>
+        </v-app-bar>
+
+        <v-main>
+            <Departments />
+        </v-main>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import Departments from "./components/Departments";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: "App",
+
+        components: {
+            Departments,
+        },
+
+        data: () => ({
+            //
+        }),
+    };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.app-bar-title {
+    font-size: 1.5em;
 }
 </style>
