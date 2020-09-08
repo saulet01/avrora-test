@@ -5,33 +5,26 @@
                 <v-card>
                     <v-card-title class="card-title" :style="{ 'background-color': primaryBackgroundColor }">Организационная структура</v-card-title>
                     <v-card-actions class="pa-4">
-                        <div>
-                            <v-btn small class="btn-add" @click="addNewDepartment">
-                                <v-icon size="small" class="mr-1">fas fa-plus</v-icon>
-                                Добавить</v-btn
-                            >
-                        </div>
+                        <Settings name="" count="" typeSubmit="add" title="Добавить">
+                            <v-icon size="small" class="mr-1">mdi-plus-thick</v-icon>
+                            Добавить
+                        </Settings>
                     </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12">
-                <v-container class="my-0 py-0">
-                    <v-row justify="start" :style="{ 'background-color': primaryBackgroundColor }" class="table-header">
-                        <v-col cols="7"></v-col>
-                        <v-col cols="3" class="table-border-left">Общее количество</v-col>
-                        <v-col cols="2" class="table-border-left ">Действия</v-col>
-                    </v-row>
-                </v-container>
-                <tree-item :item="item" v-for="(item, index) in departments" :key="index + 'i'" :depth="1" />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12">
-                <v-container>
-                    <v-img :src="img"></v-img>
-                </v-container>
+            <v-col cols="12" class="table-all">
+                <v-card>
+                    <v-container class="my-0 py-0">
+                        <v-row justify="start" :style="{ 'background-color': primaryBackgroundColor }" class="table-header">
+                            <v-col cols="7" lg="7" md="7"></v-col>
+                            <v-col cols="3" lg="3" md="2" class="table-border-left">Общее количество</v-col>
+                            <v-col cols="2" lg="2" md="3" class="table-border-left">Действия</v-col>
+                        </v-row>
+                    </v-container>
+                    <tree-item :item="item" v-for="(item, index) in departments" :key="index + 'b'" :depth="1" :class="{ active: index === activeItem }" @setCurrentClass="setActiveClass" />
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
@@ -40,15 +33,16 @@
 <script>
 import TreeItem from "./TreeItem";
 import { mapGetters } from "vuex";
+import Settings from "./Settings";
 
 export default {
-    components: { TreeItem },
+    components: { TreeItem, Settings },
     name: "Departments",
     data() {
         return {
             primaryBackgroundColor: this.$vuetify.theme.themes.light.primary,
             isOpen: false,
-            img: require("@/assets/images/screen.png"),
+            activeItem: null,
         };
     },
 
@@ -59,16 +53,13 @@ export default {
             }
         },
 
-        addNewDepartment() {
-            this.$store.dispatch("AddItem");
+        setActiveClass(activeElelemnt) {
+            this.activeItem = activeElelemnt;
         },
     },
 
     computed: {
         ...mapGetters(["departments"]),
-        departments() {
-            return this.$store.state.data;
-        },
     },
 };
 </script>
@@ -82,10 +73,6 @@ export default {
 
 .card-content {
     padding: 10;
-}
-
-.btn-add {
-    text-transform: capitalize !important;
 }
 
 .items {

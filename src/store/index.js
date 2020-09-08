@@ -30,28 +30,25 @@ export default new Vuex.Store({
         },
         addNewDepartment: (state, payload) => {
             if (state.currentElement.children && state.currentElement.children.length) {
-                state.currentElement.children.push({
-                    id: 213123,
-                    name: "AAA",
-                    count: 500,
-                });
+                state.currentElement.children.push(payload);
             } else if (Object.keys(state.currentElement).length === 0) {
-                state.data.push({
-                    id: 213123,
-                    name: "AAA",
-                    count: 500,
-                });
+                state.data.push(payload);
             } else {
                 Vue.set(state.currentElement, "children", []);
-                state.currentElement.children.push({
-                    id: 213123,
-                    name: "AAA",
-                    count: 500,
-                });
+                state.currentElement.children.push(payload);
             }
         },
         editDeparment: (state, payload) => {
-            payload.name = "Шымкент";
+            const findItemNested = (arr, itemId, nestingKey) =>
+                arr.reduce((a, item) => {
+                    if (a) return a;
+                    if (item.id === itemId) return item;
+                    if (item[nestingKey]) return findItemNested(item[nestingKey], itemId, nestingKey);
+                }, null);
+
+            const res = findItemNested(state.data, payload.id, "children");
+            res.name = payload.name;
+            res.count = payload.count;
         },
         removeDeparment: (state, payload) => {
             // const findItemNested = (arr, itemId, nestingKey) =>
@@ -60,9 +57,7 @@ export default new Vuex.Store({
             //         if (item.id === itemId) return item;
             //         if (item[nestingKey]) return findItemNested(item[nestingKey], itemId, nestingKey);
             //     }, null);
-
             // const res = findItemNested(array, 959, "children");
-            console.log(res);
         },
     },
     actions: {
@@ -83,6 +78,9 @@ export default new Vuex.Store({
     getters: {
         departments: (state) => {
             return state.data;
+        },
+        currentEl: (state) => {
+            return state.currentElement.id;
         },
     },
 });
