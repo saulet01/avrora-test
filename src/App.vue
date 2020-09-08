@@ -5,25 +5,28 @@
         </v-app-bar>
 
         <v-main>
+            <Snackbar />
             <Departments />
         </v-main>
     </v-app>
 </template>
 
 <script>
-    import Departments from "./components/Departments";
+import Departments from "./components/Departments";
+import Snackbar from "./components/UI/Snackbar";
 
-    export default {
-        name: "App",
+export default {
+    name: "App",
 
-        components: {
-            Departments,
-        },
+    components: {
+        Departments,
+        Snackbar,
+    },
 
-        data: () => ({
-            //
-        }),
-    };
+    data: () => ({
+        //
+    }),
+};
 </script>
 
 <style scoped>

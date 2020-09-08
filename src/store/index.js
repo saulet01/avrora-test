@@ -23,6 +23,8 @@ export default new Vuex.Store({
             },
         ],
         currentElement: {},
+        snackbar: false,
+        snackbarMessage: "",
     },
     mutations: {
         assignCurrentElement: (state, payload) => {
@@ -51,13 +53,29 @@ export default new Vuex.Store({
             res.count = payload.count;
         },
         removeDeparment: (state, payload) => {
-            // const findItemNested = (arr, itemId, nestingKey) =>
-            //     arr.reduce((a, item) => {
-            //         if (a) return a;
-            //         if (item.id === itemId) return item;
-            //         if (item[nestingKey]) return findItemNested(item[nestingKey], itemId, nestingKey);
-            //     }, null);
-            // const res = findItemNested(array, 959, "children");
+            const deleteObject = (arr, id) => {
+                return arr
+                    .filter((elem) => elem.id !== id)
+                    .map((elem) =>
+                        elem.children
+                            ? {
+                                  ...elem,
+                                  children: deleteObject(elem.children, id),
+                              }
+                            : elem
+                    );
+            };
+            let response = deleteObject(state.data, payload);
+            state.data = response;
+        },
+        closeSnackbar: (state, payload) => {
+            state.snackbar = false;
+        },
+        openSnackbar: (state, payload) => {
+            state.snackbar = true;
+        },
+        setMessageSnackbar: (state, payload) => {
+            state.snackbarMessage = payload;
         },
     },
     actions: {
@@ -66,12 +84,18 @@ export default new Vuex.Store({
         },
         AddItem: ({ commit }, payload) => {
             commit("addNewDepartment", payload);
+            commit("setMessageSnackbar", `Вы успешно добавили '${payload.name}' филиал!`);
+            commit("openSnackbar");
         },
         editCurrentElement: ({ commit }, payload) => {
             commit("editDeparment", payload);
+            commit("setMessageSnackbar", `Вы успешно изменили '${payload.name}' филиал!`);
+            commit("openSnackbar");
         },
         removeCurrentElement: ({ commit }, payload) => {
             commit("removeDeparment", payload);
+            commit("setMessageSnackbar", `Вы успешно удалили филиал!`);
+            commit("openSnackbar");
         },
     },
     modules: {},
@@ -81,6 +105,12 @@ export default new Vuex.Store({
         },
         currentEl: (state) => {
             return state.currentElement.id;
+        },
+        getSnackbar: (state) => {
+            return state.snackbar;
+        },
+        getSnackbarMessage: (state) => {
+            return state.snackbarMessage;
         },
     },
 });

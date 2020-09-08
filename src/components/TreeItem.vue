@@ -2,7 +2,7 @@
     <v-container class="my-0 py-0 table-col item">
         <v-hover v-slot:default="{ hover }">
             <v-row :class="activeElement === currentEl ? 'active' : 'noactive'" @click="setActive(item)" class="simple table-border-bottom" justify="start" :style="hover ? { backgroundColor: '#A4C3FA' } : {}">
-                <v-col cols="7" lg="7" md="7" class="col2-color table-col" @click="toggleOpen(item)">
+                <v-col cols="7" lg="7" md="7" class="table-col" @click="toggleOpen(item)">
                     <div class="dep-name">
                         <div :style="indent">
                             {{ item.name }}
@@ -13,15 +13,12 @@
                         </span>
                     </div>
                 </v-col>
-                <v-col cols="3" lg="3" md="2" class="col1-color table-border-left">{{ item.count }}</v-col>
+                <v-col cols="3" lg="3" md="2" class="table-border-left">{{ item.count }}</v-col>
                 <v-col cols="2" lg="2" md="3" class="d-flex table-border-left">
                     <Settings :name="item.name" :count="item.count" :btnType="true" typeSubmit="edit" :id="item.id" title="Изменить">
                         <v-icon size="2em">mdi-pencil</v-icon>
                     </Settings>
-
-                    <v-btn text @click="removeDepartment(item)">
-                        <v-icon size="2em">mdi-close-circle</v-icon>
-                    </v-btn>
+                    <Remove :name="item.name" :id="item.id" />
                 </v-col>
             </v-row>
         </v-hover>
@@ -35,10 +32,12 @@
 <script>
 import { mapGetters } from "vuex";
 import Settings from "./Settings";
+import Remove from "./Remove";
 export default {
     name: "TreeItem",
     components: {
         Settings,
+        Remove,
     },
     props: {
         item: {
@@ -74,9 +73,6 @@ export default {
             this.$store.dispatch("setCurrentElement", item);
             this.isOpen = !this.isOpen;
         },
-        // removeDepartment(item) {
-        //     this.$store.dispatch("removeCurrentElement", item);
-        // },
         setActive(element) {
             if (element.id == this.currentEl) {
                 this.activeElement = this.currentEl;
@@ -87,22 +83,6 @@ export default {
 </script>
 
 <style scoped>
-/* .col-color {
-    background-color: tomato;
-} */
-
-/* .col1-color {
-    background-color: green;
-}
-
-.col2-color {
-    background-color: yellow;
-} */
-
-/* .noactive {
-    background-color: #fff;
-} */
-
 .active {
     background-color: #cadcfb;
 }
@@ -110,7 +90,6 @@ export default {
 .simple {
     display: flex;
     flex-direction: row;
-    /* border: 1px solid black; */
 }
 
 .dep-name {
@@ -119,17 +98,6 @@ export default {
     align-content: center;
     align-items: center;
 }
-/* .item {
-    cursor: pointer;
-}
-.bold {
-    font-weight: bold;
-}
-ul {
-    padding-left: 1em;
-    line-height: 1.5em;
-    list-style-type: dot;
-} */
 
 .item {
     cursor: pointer;
